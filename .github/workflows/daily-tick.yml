@@ -14,17 +14,19 @@ jobs:
     steps:
       - name: Advance the world one week
         run: |
-          set -euo pipefail
-          response=$(curl -fsS -w "\n%{http_code}" -X POST "${{ secrets.TICK_URL }}" \
+          set -uo pipefail
+          response=$(curl -fsS -w $'\n%{http_code}' -X POST "${{ secrets.TICK_URL }}" \
             -H "x-cron-secret: ${{ secrets.CRON_SECRET }}" \
             -H "Content-Type: application/json" \
             -d '{"weeks":1}')
-          body=$(echo "$response" | head -n -1)
-          code=$(echo "$response" | tail -n 1)
+          curl_exit=$?
+          code=$(printf '%s' "$response" | tail -n1)
+          body=$(printf '%s' "$response" | sed '$d')
           echo "HTTP $code"
-          echo "$body" | head -c 400
-          if [ "$code" != "200" ]; then
-            echo "::error::Tick failed with HTTP $code"
+          printf '%s' "${body:0:400}"
+          echo
+          if [ "$curl_exit" -ne 0 ] || [ "$code" != "200" ]; then
+            echo "::error::Tick failed (curl_exit=$curl_exit, http=$code)"
             exit 1
           fi
           echo "✓ Tick succeeded"
