@@ -1,0 +1,16 @@
+name: Keep Supabase Alive
+# Pings the deployed keep-alive endpoint so the free Supabase project never
+# pauses (and therefore is never deleted). Under 5 Action-minutes per month.
+
+on:
+  schedule:
+    - cron: "0 9 */3 * *" # every 3 days at 09:00 UTC
+  workflow_dispatch: # manual trigger
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping keep-alive endpoint
+        run: |
+          curl -f "${{ secrets.SUPABASE_KEEPALIVE_URL }}" || echo "Keep-alive ping failed — check deployment"

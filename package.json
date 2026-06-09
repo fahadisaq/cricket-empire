@@ -1,0 +1,29 @@
+{
+  "name": "cricket-empire",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "A deep T20 cricket management sim — powerful engine + self-managing AI clubs.",
+  "scripts": {
+    "season": "tsx src/cli.ts season",
+    "match": "tsx src/cli.ts match",
+    "world": "tsx src/cli.ts world",
+    "balance": "tsx src/cli.ts balance",
+    "db:check": "tsx src/scripts/supabase.ts check",
+    "db:seed": "tsx src/scripts/supabase.ts seed",
+    "db:reseed": "tsx src/scripts/supabase.ts reseed",
+    "db:tick": "tsx src/scripts/supabase.ts tick",
+    "test": "tsx src/engine/engine.test.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@vercel/node": "^3.2.0",
+    "tsx": "^4.19.2",
+    "typescript": "~5.6.3"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.0",
+    "cors": "^2.8.5",
+    "express": "^4.21.1"
+  }
+}

@@ -1,0 +1,22 @@
+name: Daily World Tick
+# Advances the Cricket Empire world by one game-week each day by hitting the
+# deployed tick endpoint. Reliable + free on GitHub Actions (public repo).
+# Also acts as a Supabase keep-alive (the tick reads/writes the DB).
+
+on:
+  schedule:
+    - cron: "0 9 * * *" # every day at 09:00 UTC
+  workflow_dispatch: # manual "play next week" button in the Actions tab
+
+jobs:
+  tick:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Advance the world one week
+        run: |
+          curl -fsS -X POST "${{ secrets.TICK_URL }}" \
+            -H "x-cron-secret: ${{ secrets.CRON_SECRET }}" \
+            -H "Content-Type: application/json" \
+            -d '{"weeks":1}' \
+            && echo "Tick OK" \
+            || echo "Tick failed — check deployment / secrets"
